@@ -36,4 +36,28 @@ public class NoteController {
         Long userId = (Long) authentication.getPrincipal();
         return ResponseEntity.ok(noteService.getAllNotes(userId));
     }
+
+    @PutMapping("/{noteId}/pin")
+    public ResponseEntity<NoteResponseDto> togglePin(
+            @PathVariable Long noteId,
+            Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
+        return ResponseEntity.ok(noteService.togglePin(noteId, userId));
+    }
+
+    @PutMapping("/{noteId}/archive")
+    public ResponseEntity<NoteResponseDto> toggleArchive(
+            @PathVariable Long noteId,
+            Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
+        return ResponseEntity.ok(noteService.toggleArchive(noteId, userId));
+    }
+
+    @PutMapping("/{noteId}/trash")
+    public ResponseEntity<NoteResponseDto> toggleTrash(
+            @PathVariable Long noteId,
+            Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
+        return ResponseEntity.ok(noteService.toggleTrash(noteId, userId));
+    }
 }
