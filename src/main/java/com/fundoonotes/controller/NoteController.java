@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/notes")
 public class NoteController {
@@ -26,5 +28,12 @@ public class NoteController {
         Long userId = (Long) authentication.getPrincipal();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(noteService.createNote(requestDto, userId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<NoteResponseDto>> getAllNotes(
+            Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
+        return ResponseEntity.ok(noteService.getAllNotes(userId));
     }
 }

@@ -7,6 +7,9 @@ import com.fundoonotes.repository.NoteRepository;
 import com.fundoonotes.service.NoteService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class NoteServiceImpl implements NoteService {
 
@@ -27,6 +30,15 @@ public class NoteServiceImpl implements NoteService {
         note.setTrashed(false);
         Note savedNote = noteRepository.save(note);
         return mapToResponse(savedNote);
+    }
+
+    @Override
+    public List<NoteResponseDto> getAllNotes(Long userId) {
+        return noteRepository
+                .findByUserIdAndIsArchivedFalseAndIsTrashedFalse(userId)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     protected NoteResponseDto mapToResponse(Note note) {
