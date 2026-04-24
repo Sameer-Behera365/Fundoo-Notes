@@ -3,6 +3,7 @@ package com.fundoonotes.service.impl;
 import com.fundoonotes.dto.request.NoteRequestDto;
 import com.fundoonotes.dto.response.NoteResponseDto;
 import com.fundoonotes.entity.Note;
+import com.fundoonotes.exception.NoteNotFoundException;
 import com.fundoonotes.repository.NoteRepository;
 import com.fundoonotes.service.NoteService;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,36 @@ public class NoteServiceImpl implements NoteService {
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public NoteResponseDto togglePin(Long noteId, Long userId) {
+        Note note = getNoteByIdAndUserId(noteId, userId);
+        note.setPinned(!note.isPinned());
+        return mapToResponse(noteRepository.save(note));
+    }
+
+    @Override
+    public NoteResponseDto toggleArchive(Long noteId, Long userId) {
+        Note note = getNoteByIdAndUserId(noteId, userId);
+        note.setArchived(!note.isArchived());
+        return mapToResponse(noteRepository.save(note));
+    }
+
+    @Override
+    public NoteResponseDto toggleTrash(Long noteId, Long userId) {
+        Note note = getNoteByIdAndUserId(noteId, userId);
+        note.setTrashed(!note.isTrashed());
+        return mapToResponse(noteRepository.save(note));
+    }
+
+    private Note getNoteByIdAndUserId(Long noteId, Long userId) {
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new NoteNotFoundException("Note not found"));
+        if (!note.getUserId().equals(userId)) {
+            throw new NoteNotFoundException("Note not found for this user");
+        }
+        return note;
     }
 
     protected NoteResponseDto mapToResponse(Note note) {

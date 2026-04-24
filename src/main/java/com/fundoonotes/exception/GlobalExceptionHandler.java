@@ -43,6 +43,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
+    @ExceptionHandler(NoteNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNoteNotFound(
+            NoteNotFoundException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        response.put("statusCode", HttpStatus.NOT_FOUND.value());
+        response.put("timestamp", LocalDateTime.now().toString());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(
             MethodArgumentNotValidException ex) {

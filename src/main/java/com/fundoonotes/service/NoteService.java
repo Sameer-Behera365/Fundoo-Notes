@@ -8,4 +8,7 @@ import java.util.List;
 public interface NoteService {
     NoteResponseDto createNote(NoteRequestDto requestDto, Long userId);
     List<NoteResponseDto> getAllNotes(Long userId);
+    NoteResponseDto togglePin(Long noteId, Long userId);
+    NoteResponseDto toggleArchive(Long noteId, Long userId);
+    NoteResponseDto toggleTrash(Long noteId, Long userId);
 }
